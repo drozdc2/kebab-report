@@ -1,1 +1,745 @@
-index.html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Купоны 2026 — Кебаб в подарок</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f7f7f5;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.14);
+    --text: #0f0f0f;
+    --text-2: #5a5a56;
+    --text-3: #9a9a94;
+    --bor: #2d7fd4;
+    --zho: #17916a;
+    --acc: #6e67cc;
+    --red: #d44a2d;
+    --amber: #b06c10;
+    --radius: 10px;
+    --mono: 'Geist Mono', monospace;
+    --serif: 'Instrument Serif', serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--mono);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 52px;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 500; color: var(--text);
+    text-decoration: none;
+  }
+  .nav-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--acc); flex-shrink: 0;
+  }
+  .nav-links {
+    display: flex; gap: 28px; list-style: none;
+  }
+  .nav-links a {
+    font-size: 11px; color: var(--text-3); text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── LAYOUT ── */
+  main { max-width: 960px; margin: 0 auto; padding: 0 32px 80px; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 56px;
+  }
+  .hero-label {
+    font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);
+    text-transform: uppercase; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-label::before {
+    content: ''; display: block;
+    width: 24px; height: 1px; background: var(--text-3);
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 6vw, 58px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--acc);
+  }
+  .hero-meta {
+    font-size: 12px; color: var(--text-3);
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+  .hero-meta span::before {
+    content: ''; display: block;
+    width: 4px; height: 4px; border-radius: 50%; background: var(--text-3);
+  }
+  .hero-meta span:first-child::before { display: none; }
+
+  /* ── SECTION ── */
+  section { margin-bottom: 64px; }
+  .section-header {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 24px;
+  }
+  .section-num {
+    font-size: 11px; color: var(--text-3);
+    letter-spacing: 0.06em; flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: 22px; font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  /* ── METRIC CARDS ── */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 56px;
+  }
+  .metric {
+    background: var(--bg);
+    padding: 28px 24px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .metric-val {
+    font-family: var(--serif);
+    font-size: 38px; line-height: 1;
+    font-weight: 400; letter-spacing: -0.03em;
+  }
+  .metric-val.bor { color: var(--bor); }
+  .metric-val.zho { color: var(--zho); }
+  .metric-label {
+    font-size: 11px; color: var(--text-3);
+    letter-spacing: 0.04em;
+  }
+  .metric-sub { font-size: 11px; color: var(--text-3); }
+
+  /* ── CHART AREA ── */
+  .chart-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 8px;
+  }
+  .chart-caption {
+    font-size: 11px; color: var(--text-3);
+    padding: 0 4px; margin-bottom: 32px;
+  }
+  .legend {
+    display: flex; gap: 20px; margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 11px; color: var(--text-2);
+  }
+  .legend-dot {
+    width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0;
+  }
+
+  /* ── HEATMAP TABLE ── */
+  .heatmap-wrap {
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 8px;
+  }
+  .heatmap-wrap table {
+    width: 100%; border-collapse: separate; border-spacing: 3px;
+  }
+  .heatmap-wrap th {
+    font-size: 11px; font-weight: 500;
+    color: var(--text-3); letter-spacing: 0.06em;
+    padding: 4px 10px; text-align: center;
+  }
+  .heatmap-wrap th:first-child { text-align: left; }
+  .heatmap-wrap td {
+    font-size: 12px; font-weight: 400;
+    text-align: center; padding: 7px 10px;
+    border-radius: 5px;
+    transition: opacity 0.15s;
+  }
+  .heatmap-wrap td:first-child { text-align: left; font-size: 11px; padding-left: 2px; }
+  .heatmap-wrap td.total { font-weight: 500; color: var(--text); }
+
+  /* ── DATA TABLE ── */
+  .data-table-wrap {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .data-table {
+    width: 100%; border-collapse: collapse;
+  }
+  .data-table thead tr {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table th {
+    font-size: 11px; font-weight: 500; color: var(--text-3);
+    letter-spacing: 0.06em; padding: 12px 16px; text-align: left;
+  }
+  .data-table th.num { text-align: right; }
+  .data-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  .data-table tbody tr:last-child { border-bottom: none; }
+  .data-table tbody tr:hover { background: var(--surface); }
+  .data-table td {
+    padding: 11px 16px; font-size: 12px; color: var(--text);
+  }
+  .data-table td.num { text-align: right; color: var(--text-2); }
+  .data-table td.total-td { text-align: right; font-weight: 500; color: var(--text); }
+  .data-table tfoot tr { background: var(--surface); border-top: 1px solid var(--border-strong); }
+  .data-table tfoot td { font-weight: 500; font-size: 12px; color: var(--text); padding: 12px 16px; }
+  .city-tag {
+    display: inline-block;
+    font-size: 10px; letter-spacing: 0.04em;
+    padding: 2px 8px; border-radius: 4px;
+    font-weight: 400;
+  }
+  .city-bor { background: rgba(45,127,212,0.1); color: var(--bor); }
+  .city-zho { background: rgba(23,145,106,0.1); color: var(--zho); }
+
+  /* ── INSIGHTS ── */
+  .insights { display: flex; flex-direction: column; gap: 2px; }
+  .insight {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 0;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: default;
+    transition: background 0.1s;
+  }
+  .insight:first-child { border-top: 1px solid var(--border); }
+  .insight:hover { background: var(--surface); padding-left: 8px; padding-right: 8px;
+    margin-left: -8px; margin-right: -8px; border-radius: 6px; border-color: transparent; }
+  .insight-num {
+    font-size: 11px; color: var(--text-3);
+    padding-top: 2px; font-weight: 300;
+  }
+  .insight-body {}
+  .insight-title {
+    font-family: var(--serif);
+    font-size: 16px; font-weight: 400;
+    color: var(--text); margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .insight-text { font-size: 12px; color: var(--text-2); line-height: 1.7; }
+  .tag {
+    display: inline-block; font-size: 10px;
+    padding: 2px 7px; border-radius: 4px;
+    margin-right: 4px; margin-bottom: 4px;
+    border: 1px solid var(--border-strong);
+    color: var(--text-2);
+  }
+  .tag.warn { border-color: rgba(180,108,16,0.3); color: var(--amber); background: rgba(180,108,16,0.06); }
+  .tag.good { border-color: rgba(23,145,106,0.3); color: var(--zho); background: rgba(23,145,106,0.06); }
+  .tag.bad  { border-color: rgba(212,74,45,0.3);  color: var(--red);  background: rgba(212,74,45,0.06); }
+
+  /* ── CAUSES ── */
+  .causes { display: flex; flex-direction: column; gap: 10px; }
+  .cause-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 56px;
+    align-items: center;
+    gap: 14px;
+  }
+  .cause-rank { font-size: 11px; color: var(--text-3); text-align: right; }
+  .cause-label { font-size: 12px; color: var(--text-2); }
+  .cause-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .cause-bar {
+    flex: 1; height: 3px; background: var(--border);
+    border-radius: 2px; overflow: hidden;
+  }
+  .cause-bar-fill { height: 100%; border-radius: 2px; background: var(--acc); }
+  .cause-count { font-size: 11px; color: var(--text-3); text-align: right; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 32px;
+    max-width: 960px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer p { font-size: 11px; color: var(--text-3); }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 680px) {
+    main, footer { padding-left: 20px; padding-right: 20px; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .metric-val { font-size: 28px; }
+    .hero { padding: 48px 0 40px; }
+    .hero h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="#">
+    <span class="nav-dot"></span>
+    Купоны / 2026
+  </a>
+  <ul class="nav-links">
+    <li><a href="#charts">Графики</a></li>
+    <li><a href="#table">Таблица</a></li>
+    <li><a href="#insights">Выводы</a></li>
+    <li><a href="#causes">Причины</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero fade-up">
+    <p class="hero-label">Аналитический отчёт</p>
+    <h1>Кебаб<br>в <em>подарок</em></h1>
+    <div class="hero-meta">
+      <span>900 промокодов</span>
+      <span>Январь — Май 2026</span>
+      <span>16 объектов</span>
+      <span>Борисов · Жодино</span>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="metrics fade-up">
+    <div class="metric">
+      <div class="metric-val">900</div>
+      <div class="metric-label">Всего купонов</div>
+      <div class="metric-sub">янв — май 2026</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val bor">539</div>
+      <div class="metric-label">Борисов</div>
+      <div class="metric-sub">60% от общего</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val zho">361</div>
+      <div class="metric-label">Жодино</div>
+      <div class="metric-sub">40% от общего</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">172</div>
+      <div class="metric-label">Лидер — 50 лет</div>
+      <div class="metric-sub">самый проблемный</div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <section id="charts">
+    <div class="section-header fade-up">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Купоны по объектам</h2>
+    </div>
+    <div class="legend fade-up">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--bor)"></div>Борисов</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--zho)"></div>Жодино</div>
+    </div>
+    <div class="chart-wrap fade-up">
+      <div style="position:relative;width:100%;height:380px;">
+        <canvas id="chartLoc" role="img" aria-label="Купоны по объектам"></canvas>
+      </div>
+    </div>
+    <p class="chart-caption fade-up">Рис. 1 — Общее количество выданных купонов по каждому объекту за январь–май 2026</p>
+
+    <div class="section-header fade-up" style="margin-top:48px;">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Динамика по месяцам</h2>
+    </div>
+    <div class="chart-wrap fade-up">
+      <div style="position:relative;width:100%;height:240px;">
+        <canvas id="chartMonths" role="img" aria-label="Динамика купонов по месяцам"></canvas>
+      </div>
+    </div>
+    <p class="chart-caption fade-up">Рис. 2 — Количество купонов по месяцам; пик — январь (215), минимум — март (153)</p>
+  </section>
+
+  <!-- HEATMAP -->
+  <section>
+    <div class="section-header fade-up">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Тепловая карта: топ-8 объектов × месяц</h2>
+    </div>
+    <div class="heatmap-wrap fade-up">
+      <table id="heatmap"></table>
+    </div>
+    <p class="chart-caption fade-up">Интенсивность цвета отражает количество купонов. Синий — Борисов, зелёный — Жодино</p>
+  </section>
+
+  <!-- TABLE -->
+  <section id="table">
+    <div class="section-header fade-up">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Детальная таблица</h2>
+    </div>
+    <div class="data-table-wrap fade-up">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Объект</th>
+            <th>Город</th>
+            <th class="num">Янв</th>
+            <th class="num">Фев</th>
+            <th class="num">Мар</th>
+            <th class="num">Апр</th>
+            <th class="num">Май</th>
+            <th class="num">Итого</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Итого</td>
+            <td class="num" style="text-align:right">215</td>
+            <td class="num" style="text-align:right">174</td>
+            <td class="num" style="text-align:right">153</td>
+            <td class="num" style="text-align:right">165</td>
+            <td class="num" style="text-align:right">193</td>
+            <td class="num" style="text-align:right;font-weight:600">900</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <!-- INSIGHTS -->
+  <section id="insights">
+    <div class="section-header fade-up">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Ключевые выводы</h2>
+    </div>
+    <div class="insights fade-up">
+      <div class="insight">
+        <div class="insight-num">01</div>
+        <div class="insight-body">
+          <div class="insight-title">Жодино непропорционально лидирует</div>
+          <p class="insight-text">«50 лет» (172) и «Калина» (144) занимают 1-е и 2-е место при том, что Жодино — лишь 40% общего объёма заказов. Опоздания равномерны по всем месяцам — это системная проблема логистики, а не сезонный всплеск.</p>
+          <div style="margin-top:10px;">
+            <span class="tag bad">системная проблема</span>
+            <span class="tag">Жодино</span>
+          </div>
+        </div>
+      </div>
+      <div class="insight">
+        <div class="insight-num">02</div>
+        <div class="insight-body">
+          <div class="insight-title">«Проспект» — январский всплеск, затем улучшение</div>
+          <p class="insight-text">Январь: 38 купонов → март: 13. Перегруз после новогодних праздников, судя по всему, был устранён. Однако май снова даёт 19 — стоит держать на контроле и не допустить повторного роста.</p>
+          <div style="margin-top:10px;">
+            <span class="tag good">улучшение есть</span>
+            <span class="tag warn">май под контролем</span>
+          </div>
+        </div>
+      </div>
+      <div class="insight">
+        <div class="insight-num">03</div>
+        <div class="insight-body">
+          <div class="insight-title">«Жд» — резкое падение в мае</div>
+          <p class="insight-text">Январь–апрель стабильно 17–23 купона, в мае — резкое падение до 5. Это может быть как улучшением курьерской работы, так и сокращением потока заказов — необходимо проверить данные по заказам.</p>
+          <div style="margin-top:10px;">
+            <span class="tag warn">нужна проверка</span>
+            <span class="tag">Борисов</span>
+          </div>
+        </div>
+      </div>
+      <div class="insight">
+        <div class="insight-num">04</div>
+        <div class="insight-body">
+          <div class="insight-title">«Старик» и «Тех» растут в мае</div>
+          <p class="insight-text">31 и 29 купонов соответственно — заметный рост к концу периода на фоне снижения у других объектов. Возможно, увеличился объём заказов или изменился состав курьеров.</p>
+          <div style="margin-top:10px;">
+            <span class="tag bad">тренд вверх</span>
+            <span class="tag">Борисов</span>
+          </div>
+        </div>
+      </div>
+      <div class="insight">
+        <div class="insight-num">05</div>
+        <div class="insight-body">
+          <div class="insight-title">Главная причина — перегруз, а не ошибки</div>
+          <p class="insight-text">«Много доставок, скинуть было некуда» — самая частая запись в колонке причин. Это системная нехватка курьерской ёмкости в пиковые часы, а не халатность конкретных сотрудников. Решение — планирование смен под нагрузку.</p>
+          <div style="margin-top:10px;">
+            <span class="tag bad">системно</span>
+            <span class="tag warn">требует решения</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAUSES -->
+  <section id="causes">
+    <div class="section-header fade-up">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Топ причин опоздания</h2>
+    </div>
+    <div class="causes fade-up" id="causes"></div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Источник: «Купоны Нов» · вкладка «Кебаб в подарок»</p>
+  <p>Период: 01.01.2026 — 31.05.2026 · 900 записей</p>
+</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+const locations = [
+  {name:'50 лет',      city:'жодино',  m:[27,35,41,32,37], total:172},
+  {name:'Калина',      city:'жодино',  m:[29,22,26,27,40], total:144},
+  {name:'Проспект',    city:'борисов', m:[38,22,13,17,19], total:109},
+  {name:'Тех',         city:'борисов', m:[22,16,14,17,29], total: 98},
+  {name:'Старик',      city:'борисов', m:[18,19,13,12,31], total: 94},
+  {name:'Жд',          city:'борисов', m:[23,20,19,17, 5], total: 84},
+  {name:'Мира',        city:'жодино',  m:[10, 7, 8, 9, 8], total: 42},
+  {name:'Грин',        city:'борисов', m:[ 5, 7, 8, 7, 9], total: 36},
+  {name:'Днепр',       city:'борисов', m:[ 9, 5, 6,10, 6], total: 36},
+  {name:'Приборы',     city:'борисов', m:[15, 4, 0, 7, 1], total: 27},
+  {name:'Трусова',     city:'борисов', m:[ 6,12, 1, 1, 1], total: 21},
+  {name:'Ляды',        city:'борисов', m:[ 4, 3, 1, 9, 0], total: 17},
+  {name:'Труда',       city:'борисов', m:[ 4, 2, 2, 0, 4], total: 12},
+  {name:'Углы',        city:'борисов', m:[ 3, 0, 0, 0, 0], total:  3},
+];
+
+const months = ['Янв','Фев','Мар','Апр','Май'];
+const monthTotals = [215,174,153,165,193];
+
+const causes = [
+  {text:'Много доставок / перегруз курьеров', n:25},
+  {text:'Пробки',                              n: 8},
+  {text:'Курьера задержали военные',           n: 5},
+  {text:'Поломка машины курьера',              n: 4},
+  {text:'Медленный повар',                     n: 4},
+  {text:'Погодные условия',                    n: 3},
+  {text:'Не было мяса / лаваша',               n: 3},
+  {text:'Курьер застрял в снежной яме',        n: 3},
+];
+
+const C_BOR = '#2d7fd4';
+const C_ZHO = '#17916a';
+const C_ACC = '#6e67cc';
+
+// ── CHART 1: locations ────────────────────────────────────────
+const ctxLoc = document.getElementById('chartLoc');
+new Chart(ctxLoc, {
+  type: 'bar',
+  data: {
+    labels: locations.map(l => l.name),
+    datasets: [{
+      data: locations.map(l => l.total),
+      backgroundColor: locations.map(l => l.city === 'жодино' ? C_ZHO : C_BOR),
+      borderWidth: 0,
+      borderRadius: 4,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0f0f0f',
+        titleColor: '#fff',
+        bodyColor: 'rgba(255,255,255,0.6)',
+        padding: 10,
+        cornerRadius: 6,
+        callbacks: { label: ctx => `  ${ctx.raw} купонов` }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
+        ticks: { font: { family: "'Geist Mono'", size: 11 }, color: '#9a9a94' },
+        border: { display: false }
+      },
+      y: {
+        grid: { display: false },
+        ticks: { font: { family: "'Geist Mono'", size: 12 }, color: '#0f0f0f' },
+        border: { display: false }
+      }
+    }
+  }
+});
+
+// ── CHART 2: months ───────────────────────────────────────────
+const borM = [0,0,0,0,0], zhoM = [0,0,0,0,0];
+locations.forEach(l => l.m.forEach((c,i) => {
+  if (l.city === 'борисов') borM[i] += c; else zhoM[i] += c;
+}));
+
+const ctxM = document.getElementById('chartMonths');
+new Chart(ctxM, {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [
+      { label: 'Борисов', data: borM, backgroundColor: C_BOR, borderWidth:0, borderRadius:4, borderSkipped:false },
+      { label: 'Жодино',  data: zhoM, backgroundColor: C_ZHO, borderWidth:0, borderRadius:4, borderSkipped:false },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0f0f0f',
+        titleColor: '#fff',
+        bodyColor: 'rgba(255,255,255,0.6)',
+        padding: 10, cornerRadius: 6,
+      }
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { font: { family: "'Geist Mono'", size: 12 }, color: '#0f0f0f' },
+        border: { display: false },
+        stacked: false,
+      },
+      y: {
+        grid: { color: 'rgba(0,0,0,0.05)' },
+        ticks: { font: { family: "'Geist Mono'", size: 11 }, color: '#9a9a94' },
+        border: { display: false },
+        stacked: false,
+      }
+    }
+  }
+});
+
+// ── HEATMAP ───────────────────────────────────────────────────
+const top8 = locations.slice(0, 8);
+const hmMax = Math.max(...top8.flatMap(l => l.m));
+const hmEl = document.getElementById('heatmap');
+let hmHtml = '<thead><tr><th>Объект</th>';
+months.forEach(m => { hmHtml += `<th>${m}</th>`; });
+hmHtml += '<th>Итого</th></tr></thead><tbody>';
+
+top8.forEach(loc => {
+  const base = loc.city === 'жодино' ? [23,145,106] : [45,127,212];
+  hmHtml += `<tr><td>${loc.name}</td>`;
+  loc.m.forEach(v => {
+    const alpha = v === 0 ? 0 : 0.07 + (v / hmMax) * 0.75;
+    const textAlpha = alpha > 0.5 ? 1 : 0.8;
+    const textColor = alpha > 0.5
+      ? (loc.city === 'жодино' ? '#0a4a36' : '#0d2e52')
+      : '#2a2a26';
+    hmHtml += `<td style="background:rgba(${base[0]},${base[1]},${base[2]},${alpha.toFixed(2)});color:${textColor}">${v || '·'}</td>`;
+  });
+  hmHtml += `<td class="total">${loc.total}</td></tr>`;
+});
+hmHtml += '</tbody>';
+hmEl.innerHTML = hmHtml;
+
+// ── TABLE ─────────────────────────────────────────────────────
+const tbEl = document.getElementById('tableBody');
+let tbHtml = '';
+locations.forEach(l => {
+  const isZho = l.city === 'жодино';
+  const cityTag = `<span class="city-tag ${isZho ? 'city-zho' : 'city-bor'}">${isZho ? 'Жодино' : 'Борисов'}</span>`;
+  tbHtml += `<tr>
+    <td>${l.name}</td>
+    <td>${cityTag}</td>
+    ${l.m.map(v => `<td class="num">${v}</td>`).join('')}
+    <td class="total-td">${l.total}</td>
+  </tr>`;
+});
+tbEl.innerHTML = tbHtml;
+
+// ── CAUSES ────────────────────────────────────────────────────
+const causesEl = document.getElementById('causes');
+const maxN = causes[0].n;
+causesEl.innerHTML = causes.map((c, i) => `
+  <div class="cause-row">
+    <div class="cause-rank">${String(i+1).padStart(2,'0')}</div>
+    <div>
+      <div class="cause-label">${c.text}</div>
+      <div class="cause-bar-wrap" style="margin-top:5px;">
+        <div class="cause-bar">
+          <div class="cause-bar-fill" style="width:${Math.round(c.n/maxN*100)}%;transition:width 1s ${i*0.07}s ease;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="cause-count">${c.n}</div>
+  </div>
+`).join('');
+
+// ── FADE-UP OBSERVER ─────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), 0);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-up').forEach((el, i) => {
+  el.style.transitionDelay = `${i * 0.04}s`;
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
